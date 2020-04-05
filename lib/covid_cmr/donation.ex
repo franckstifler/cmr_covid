@@ -16,9 +16,11 @@ defmodule Donation do
   end
 
   def handle_call(:get, _from, state) do
+    target = 1_000_000
+
     case get_current_status() do
-      {a, b} ->
-        {:reply, {a, b}, {a, b}}
+      {:ok, current} ->
+        {:reply, {current, target}, {current, target}}
 
       _ ->
         {:reply, state, state}
@@ -41,12 +43,16 @@ defmodule Donation do
 
         current = String.replace(current["EUR"], "€", "") |> String.replace(".", "")
 
-        {current, _} = Float.parse(current)
+        case Float.parse(current) do
+          {current, _} ->
+            {:ok, current}
 
-        {current, 1_000_000}
+          _ ->
+            {:error, :parsing_failed}
+        end
 
-      {:error, _} ->
-        {:error, 0}
+      _ ->
+        {:error, :failed_fetch}
     end
   end
 end
