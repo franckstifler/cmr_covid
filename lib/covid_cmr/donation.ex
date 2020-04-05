@@ -12,7 +12,7 @@ defmodule Donation do
   end
 
   def get_new_data do
-    GenServer.call(__MODULE__, :get)
+    GenServer.call(__MODULE__, :get, 10_000)
   end
 
   def handle_call(:get, _from, state) do
