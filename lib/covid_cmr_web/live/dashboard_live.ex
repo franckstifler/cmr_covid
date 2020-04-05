@@ -3,7 +3,10 @@ defmodule CovidCmrWeb.DashboardLive do
 
   def render(assigns) do
     ~L"""
-    <h5 class="text-center"><a href="https://cameroonsurvival.org/fr/dons/">Donnations Survival Cameroon </a> <br><small class="text-center">1 EUR ~= 655.957 XAF ~= 1.08 USD</small> </h5>
+    <h5 class="text-center"><a href="https://cameroonsurvival.org/fr/dons/">Donnations Survival Cameroon </a>
+    <br><small class="text-center">1 EUR ~= 655.957 XAF ~= 1.08 USD</small>
+    <br><small class="text-center" style="color: blue; font-weight: bold"> Mise a jour en: <%= @counter %></small>
+    </h5>
     <table>
       <tr>
         <th>Currency</th>
@@ -35,6 +38,7 @@ defmodule CovidCmrWeb.DashboardLive do
 
   def mount(_params, _, socket) do
     if connected?(socket) do
+      :timer.send_interval(1000, self(), :counter)
       :timer.send_interval(30_000, self(), :update)
     end
 
@@ -44,7 +48,8 @@ defmodule CovidCmrWeb.DashboardLive do
      socket
      |> assign(:target, target)
      |> assign(:current, current)
-     |> assign(:balance, target - current)}
+     |> assign(:balance, target - current)
+     |> assign(:counter, 30)}
   end
 
   def handle_info(:update, socket) do
@@ -55,5 +60,20 @@ defmodule CovidCmrWeb.DashboardLive do
      |> assign(:target, target)
      |> assign(:current, current)
      |> assign(:balance, target - current)}
+  end
+
+  def handle_info(:counter, socket) do
+    counter = socket.assigns.counter
+
+    socket =
+      cond do
+        counter > 0 ->
+          assign(socket, :counter, counter - 1)
+
+        true ->
+          assign(socket, :counter, 30)
+      end
+
+    {:noreply, socket}
   end
 end
