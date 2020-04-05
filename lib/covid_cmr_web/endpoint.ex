@@ -4,7 +4,7 @@ defmodule CovidCmrWeb.Endpoint do
   @session_options [store: :cookie, key: "_covid_cmr_key", signing_salt: "f86y7QNk"]
 
   socket "/socket", CovidCmrWeb.UserSocket,
-    websocket: true,
+    websocket: [timeout: 45_000],
     longpoll: false
 
   socket "/live", Phoenix.LiveView.Socket,
