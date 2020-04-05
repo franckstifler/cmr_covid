@@ -11,7 +11,7 @@ use Mix.Config
 # before starting your production server.
 config :covid_cmr, CovidCmrWeb.Endpoint,
   http: [port: {:system, "PORT"}],
-  url: [host: "tranquil-earth-77994.herokuapp.com", port: 443],
+  url: [host: "covid-cmr.herokuapp.com", port: 443],
   cache_static_manifest: "priv/static/cache_manifest.json"
 
 # Do not print debug messages in production
