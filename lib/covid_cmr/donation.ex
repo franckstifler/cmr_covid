@@ -32,16 +32,18 @@ defmodule Donation do
           body
           |> Floki.parse_document()
 
-        [current, target] =
+        [current, _target] =
           document
           |> Floki.attribute("span", "data-amounts")
           |> Enum.map(fn x ->
             Jason.decode!(x)
           end)
 
-        {a, _} = Float.parse("#{current["EUR"]}")
-        {b, _} = Float.parse("#{target["EUR"]}")
-        {a, b}
+        current = String.replace(current["EUR"], "€", "") |> String.replace(".", "")
+
+        {current, _} = Float.parse(current)
+
+        {current, 1_000_000}
 
       {:error, _} ->
         {:error, 0}
