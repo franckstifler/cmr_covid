@@ -1,0 +1,4 @@
+<section class="phx-hero">
+  <%= live_render(@conn, CovidCmrWeb.DashboardLive) %>
+  <%= live_render(@conn, CovidCmrWeb.StatisticLive) %>
+</section>
