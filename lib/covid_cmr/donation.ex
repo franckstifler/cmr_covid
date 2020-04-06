@@ -17,7 +17,7 @@ defmodule Donation do
   end
 
   def schedule_fetch() do
-    Process.send_after(self(), :get_new_data, 10_000)
+    Process.send_after(self(), :get_new_data, 40 * 1000)
   end
 
   def handle_call(:get, _from, state) do
@@ -29,9 +29,11 @@ defmodule Donation do
 
     case get_current_status() do
       {:ok, current} ->
+        schedule_fetch()
         {:noreply, {current, target}}
 
       _ ->
+        schedule_fetch()
         {:noreply, state}
     end
   end
