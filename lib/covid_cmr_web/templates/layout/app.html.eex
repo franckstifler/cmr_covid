@@ -13,8 +13,8 @@
       <section class="container-fluid">
         <nav role="phx-hero">
             <p>Bienvenue, petite application ou vous aurez les chiffres sur les donnations et sur les cas detectes. L'actualisation se fait en temps reel!
-            <strong>Les donnations sont mises a jour automatiquement chaque 30 sec, </strong>
-            <strong>Les statistiques d'infections toutes les 60 sec </strong>
+            <strong>Les donnations sont mises a jour automatiquement chaque 60 sec, </strong>
+            <strong>Les statistiques d'infections toutes les 1H </strong>
             </p>
         </nav>
       </section>

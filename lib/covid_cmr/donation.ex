@@ -8,6 +8,7 @@ defmodule Donation do
   end
 
   def init(state) do
+    schedule_fetch()
     {:ok, state}
   end
 
@@ -15,15 +16,23 @@ defmodule Donation do
     GenServer.call(__MODULE__, :get, 10_000)
   end
 
+  def schedule_fetch() do
+    Process.send_after(self(), :get_new_data, 10_000)
+  end
+
   def handle_call(:get, _from, state) do
+    {:reply, state, state}
+  end
+
+  def handle_info(:get_new_data, state) do
     target = 1_000_000
 
     case get_current_status() do
       {:ok, current} ->
-        {:reply, {current, target}, {current, target}}
+        {:noreply, {current, target}}
 
       _ ->
-        {:reply, state, state}
+        {:noreply, state}
     end
   end
 

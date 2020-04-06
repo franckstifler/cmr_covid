@@ -1,6 +1,7 @@
 defmodule CovidCmrWeb.DashboardLive do
   use Phoenix.LiveView
 
+  @counter 60
   def render(assigns) do
     ~L"""
     <h5 class="text-center"><a href="https://cameroonsurvival.org/fr/dons/">Donnations Survival Cameroon </a>
@@ -39,7 +40,7 @@ defmodule CovidCmrWeb.DashboardLive do
   def mount(_params, _, socket) do
     if connected?(socket) do
       :timer.send_interval(1000, self(), :counter)
-      :timer.send_interval(30_000, self(), :update)
+      :timer.send_interval(60_000, self(), :update)
     end
 
     {current, target} = Donation.get_new_data()
@@ -49,7 +50,7 @@ defmodule CovidCmrWeb.DashboardLive do
      |> assign(:target, target)
      |> assign(:current, current)
      |> assign(:balance, target - current)
-     |> assign(:counter, 30)}
+     |> assign(:counter, @counter)}
   end
 
   def handle_info(:update, socket) do
@@ -71,7 +72,7 @@ defmodule CovidCmrWeb.DashboardLive do
           assign(socket, :counter, counter - 1)
 
         true ->
-          assign(socket, :counter, 30)
+          assign(socket, :counter, @counter)
       end
 
     {:noreply, socket}

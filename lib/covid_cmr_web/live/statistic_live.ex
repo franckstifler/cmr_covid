@@ -39,7 +39,7 @@ defmodule CovidCmrWeb.StatisticLive do
 
   def mount(_params, _, socket) do
     if connected?(socket) do
-      :timer.send_interval(60_000, self(), :update)
+      :timer.send_interval(60 * 60 * 1_000, self(), :update)
     end
 
     %{global: global, local: local} = Statistic.get_statistics()
