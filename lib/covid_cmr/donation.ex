@@ -18,6 +18,7 @@ defmodule Donation do
 
   def init(state) do
     schedule_fetch()
+    schedule_save()
     {:ok, state}
   end
 
@@ -27,6 +28,9 @@ defmodule Donation do
 
   def schedule_fetch() do
     Process.send_after(self(), :get_new_data, 45 * 1000)
+  end
+
+  def schedule_save() do
     # Insert in db after 20 mins.
     Process.send_after(self(), :persist_data, 20 * 60 * 1000)
   end
@@ -54,6 +58,7 @@ defmodule Donation do
     |> Don.changeset(%{amount: current})
     |> Repo.insert()
 
+    schedule_save()
     {:noreply, state}
   end
 
