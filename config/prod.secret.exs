@@ -26,4 +26,5 @@ config :covid_cmr, CovidCmrWeb.Endpoint,
 # See `mix help release` for more information.
 config :covid_cmr, CovidCmr.Repo,
   ssl: true,
+  url: System.get_env("DATABASE_URL"),
   pool_size: String.to_integer(System.get_env("POOL_SIZE") || "10")
