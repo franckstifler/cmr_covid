@@ -26,5 +26,4 @@ config :covid_cmr, CovidCmrWeb.Endpoint,
 # See `mix help release` for more information.
 config :covid_cmr, CovidCmr.Repo,
   ssl: true,
-  url: "postgresql-shaped-92225",
   pool_size: String.to_integer(System.get_env("POOL_SIZE") || "10")
