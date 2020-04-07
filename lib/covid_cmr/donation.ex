@@ -3,7 +3,15 @@ defmodule Donation do
   alias CovidCmr.{Repo, Don}
 
   def start_link(_opts) do
-    current = Repo.one(Don.get_last_record()).amount
+    current =
+      case Repo.one(Don.get_last_record()) do
+        nil ->
+          0
+
+        don ->
+          don.amount
+      end
+
     target = 1_000_000
     GenServer.start_link(__MODULE__, {current, target}, name: __MODULE__)
   end
