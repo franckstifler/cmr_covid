@@ -3,7 +3,7 @@ defmodule Donation do
   alias CovidCmr.{Repo, Don}
 
   def start_link(_opts) do
-    current = 0
+    current = Repo.one(Don.get_last_record()).amount
     target = 1_000_000
     GenServer.start_link(__MODULE__, {current, target}, name: __MODULE__)
   end
@@ -18,7 +18,9 @@ defmodule Donation do
   end
 
   def schedule_fetch() do
-    Process.send_after(self(), :get_new_data, 10 * 1000)
+    Process.send_after(self(), :get_new_data, 45 * 1000)
+    # Insert in db after 20 mins.
+    Process.send_after(self(), :persist_data, 20 * 60 * 1000)
   end
 
   def handle_call(:get, _from, state) do
@@ -30,10 +32,6 @@ defmodule Donation do
 
     case get_current_status() do
       {:ok, current} ->
-        %Don{}
-        |> Don.changeset(%{amount: current})
-        |> Repo.insert()
-
         schedule_fetch()
         {:noreply, {current, target}}
 
@@ -41,6 +39,14 @@ defmodule Donation do
         schedule_fetch()
         {:noreply, state}
     end
+  end
+
+  def handle_info(:persist_data, {current, _} = state) do
+    %Don{}
+    |> Don.changeset(%{amount: current})
+    |> Repo.insert()
+
+    {:noreply, state}
   end
 
   defp get_current_status() do

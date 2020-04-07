@@ -27,4 +27,7 @@ defmodule CovidCmr.Don do
     )
   end
 
+  def get_last_record do
+    from(d in CovidCmr.Don, order_by: [desc: d.inserted_at], limit: 1)
+  end
 end
