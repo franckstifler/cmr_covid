@@ -7,6 +7,12 @@
 # General application configuration
 use Mix.Config
 
+config :covid_cmr, CovidCmr.Repo,
+  database: "covid_cmr_repo",
+  username: "postgres",
+  password: "postgres",
+  hostname: "localhost"
+
 # Configures the endpoint
 config :covid_cmr, CovidCmrWeb.Endpoint,
   url: [host: "localhost"],
@@ -29,6 +35,9 @@ config :covid_cmr, CovidCmrWeb.Endpoint,
 
 config :money,
   default_currency: :XAF
+
+config :covid_cmr,
+  ecto_repos: [CovidCmr.Repo]
 
 # Import environment specific config. This must remain at the bottom
 # of this file so it overrides the configuration defined above.

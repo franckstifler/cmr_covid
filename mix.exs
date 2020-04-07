@@ -42,7 +42,9 @@ defmodule CovidCmr.MixProject do
       {:floki, "~> 0.26"},
       {:httpoison, "~> 1.6"},
       {:phoenix_live_view, "~> 0.10.0"},
-      {:money, "~> 1.4"}
+      {:money, "~> 1.4"},
+      {:ecto_sql, "~> 3.0"},
+      {:postgrex, ">= 0.0.0"}
     ]
   end
 end

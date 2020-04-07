@@ -1,5 +1,6 @@
 defmodule Donation do
   use GenServer
+  alias CovidCmr.{Repo, Don}
 
   def start_link(_opts) do
     current = 0
@@ -17,7 +18,7 @@ defmodule Donation do
   end
 
   def schedule_fetch() do
-    Process.send_after(self(), :get_new_data, 40 * 1000)
+    Process.send_after(self(), :get_new_data, 10 * 1000)
   end
 
   def handle_call(:get, _from, state) do
@@ -29,6 +30,10 @@ defmodule Donation do
 
     case get_current_status() do
       {:ok, current} ->
+        %Don{}
+        |> Don.changeset(%{amount: current})
+        |> Repo.insert()
+
         schedule_fetch()
         {:noreply, {current, target}}
 
@@ -54,7 +59,7 @@ defmodule Donation do
 
         current = String.replace(current["EUR"], "€", "") |> String.replace(".", "")
 
-        case Float.parse(current) do
+        case Integer.parse(current) do
           {current, _} ->
             {:ok, current}
 
