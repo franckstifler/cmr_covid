@@ -44,7 +44,8 @@ defmodule CovidCmr.MixProject do
       {:phoenix_live_view, "~> 0.10.0"},
       {:money, "~> 1.4"},
       {:ecto_sql, "~> 3.0"},
-      {:postgrex, ">= 0.0.0"}
+      {:postgrex, ">= 0.0.0"},
+      {:chartkick, "~>0.4.0"}
     ]
   end
 end

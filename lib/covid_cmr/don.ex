@@ -17,16 +17,10 @@ defmodule CovidCmr.Don do
   end
 
   def group_by_hour do
-    from(
-      d in CovidCmr.Don,
-      group_by: fragment("extract(hour from ?) ", d.inserted_at),
-      select: {
-        fragment("extract(hour from ?)", d.inserted_at),
-        fragment("max(?) - min(?)", d.amount, d.amount)
-      }
-    )
+    from(d in CovidCmr.Don, order_by: [:id])
   end
 
+  @spec get_last_record :: Ecto.Query.t()
   def get_last_record do
     from(d in CovidCmr.Don, order_by: [desc: d.inserted_at], limit: 1)
   end

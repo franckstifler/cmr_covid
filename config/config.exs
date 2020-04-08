@@ -39,6 +39,8 @@ config :money,
 config :covid_cmr,
   ecto_repos: [CovidCmr.Repo]
 
+config :chartkick, json_serializer: Jason
+
 # Import environment specific config. This must remain at the bottom
 # of this file so it overrides the configuration defined above.
 import_config "#{Mix.env()}.exs"

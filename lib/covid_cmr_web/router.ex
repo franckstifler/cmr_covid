@@ -18,6 +18,9 @@ defmodule CovidCmrWeb.Router do
     pipe_through :browser
 
     get "/", PageController, :index
+    get "/stats", PageController, :stats
+    get "/projections", PageController, :projections
+    get "/consult", PageController, :consult
   end
 
   # Other scopes may use custom stacks.

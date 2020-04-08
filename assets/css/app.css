@@ -3,12 +3,23 @@
 @import "./phoenix.css";
 @import "../../deps/phoenix_live_view/assets/css/live_view.css";
 
-
 .container-fluid {
-    width: 80%;
-    margin: 0 auto;
+  width: 80%;
+  margin: 0 auto;
 }
 
 .text-center {
-    text-align: center;
+  text-align: center;
+}
+
+.links {
+  display: flex;
+  justify-content: center;
+}
+
+.links a {
+  padding: 0 15px;
+  margin: 0 15px;
+  text-decoration: underline;
+  background-color: bisque;
 }
