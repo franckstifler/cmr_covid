@@ -1,2 +1,18 @@
-En cours... In development
-<p>Stay tuned/Restez connecter</p>
+<table>
+<tr>
+<% donations = Repo.all(Don.group_by_hour) %>
+<% %{coeffs: coeffs, targets: targets} = compute_regression(donations) %>
+<th>Target €</th>
+<th>Target FCFA</th>
+<th>Estimation J/H</th>
+</tr>
+<%= for {target, expected} <- targets do %>
+<tr style="opacity: <%= 0.0000010 * target %>">
+    <td><%= Money.new(target, :EUR) %></td>
+    <td><%= Money.parse!(target * 655.957) %></td>
+    <td><%= expected %></td>
+</tr>
+<% end %>
+</table>
+<p>Applying a correlation on the data we obtain the equation: <strong>y = <%= elem(coeffs, 1) %>X + <%= elem(coeffs, 0) %></strong></p>
+<p>With a correlation coefficient r = <%= elem(coeffs, 2) %></p>
