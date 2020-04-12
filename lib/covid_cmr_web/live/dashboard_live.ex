@@ -4,6 +4,8 @@ defmodule CovidCmrWeb.DashboardLive do
   @counter 60
   def render(assigns) do
     ~L"""
+    <section class="card">
+    <h3>1- Données sur le plan de survie</h3>
     <p class="text-center">
     <small class="text-center">1 EUR ~= 655.957 XAF ~= 1.08 USD</small>
     <br><small class="text-center" style="color: blue; font-weight: bold"> Mise a jour en: <%= @counter %></small>
@@ -34,7 +36,8 @@ defmodule CovidCmrWeb.DashboardLive do
         <td style="color: red;"><%= Money.parse!(@balance * 1.08, :USD) %></td>
       </tr>
     </table>
-    <h6 class="text-center"><a href="https://cameroonsurvival.org/fr/dons/" target="_blank">Faire un don a Survival Cameroon </a></h6>
+    <h6 class="text-center"><a href="https://cameroonsurvival.org/fr/dons/" target="_blank">Faire un don SCSI </a></h6>
+    </section>
     """
   end
 

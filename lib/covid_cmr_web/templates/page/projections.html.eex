@@ -6,11 +6,11 @@
 <th>Target FCFA</th>
 <th>Estimation J/H</th>
 </tr>
-<%= for {target, expected} <- targets do %>
-<tr style="opacity: <%= 0.0000010 * target %>">
-    <td><%= Money.new(target, :EUR) %></td>
+<%= for {target, expected, meet?} <- targets do %>
+<tr class=<%=  if meet?, do: "achieved", else: "default" %>>
+    <td><%= Money.parse!(target, :EUR) %></td>
     <td><%= Money.parse!(target * 655.957) %></td>
-    <td><%= expected %></td>
+    <td><%= if meet?, do: "Attained/Atteint", else: expected %></td>
 </tr>
 <% end %>
 </table>

@@ -14,6 +14,6 @@ defmodule CovidCmrWeb.PageController do
   end
 
   def consult(conn, _params) do
-    render(conn, "projections.html")
+    render(conn, "consult.html")
   end
 end

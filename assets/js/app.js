@@ -24,3 +24,14 @@ import LiveSocket from "phoenix_live_view"
 let csrfToken = document.querySelector("meta[name='csrf-token']").getAttribute("content");
 let liveSocket = new LiveSocket("/live", Socket, { params: { _csrf_token: csrfToken } });
 liveSocket.connect()
+
+document.addEventListener("DOMContentLoaded", function (event) {
+    const trs = document.getElementsByClassName('achieved');
+    if (trs.length > 0) {
+        const lastTr = trs[trs.length - 1];
+        const nextTr = lastTr.nextElementSibling;
+        if (nextTr) {
+            nextTr.classList.add('nextTarget');
+        }
+    }
+});

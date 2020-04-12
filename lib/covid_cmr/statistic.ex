@@ -19,8 +19,8 @@ defmodule Statistic do
   end
 
   defp get_stats do
-    global_url = "https://corona.lmao.ninja/all"
-    cameroon_url = "https://corona.lmao.ninja/countries/cameroon"
+    global_url = "https://corona.lmao.ninja/v2/all?yesterday=true"
+    all_url = "https://corona.lmao.ninja/v2/countries?yesterday=true"
 
     stats = %{}
 
@@ -35,13 +35,14 @@ defmodule Statistic do
       end
 
     stats =
-      case HTTPoison.get(cameroon_url) do
+      case HTTPoison.get(all_url) do
         {:ok, %HTTPoison.Response{status_code: 200, body: body}} ->
           stats
           |> Map.put(:local, Jason.decode!(body))
+          |> IO.inspect()
 
         _ ->
-          Map.put(stats, :local, %{})
+          Map.put(stats, :local, [])
       end
 
     stats
