@@ -31,8 +31,8 @@ defmodule Donation do
   end
 
   def schedule_save() do
-    # Insert in db after 20 mins.
-    Process.send_after(self(), :persist_data, 20 * 60 * 1000)
+    # Insert in db after 10 mins.
+    Process.send_after(self(), :persist_data, 10 * 60 * 1000)
   end
 
   def handle_call(:get, _from, state) do

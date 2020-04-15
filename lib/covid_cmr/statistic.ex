@@ -39,7 +39,6 @@ defmodule Statistic do
         {:ok, %HTTPoison.Response{status_code: 200, body: body}} ->
           stats
           |> Map.put(:local, Jason.decode!(body))
-          |> IO.inspect()
 
         _ ->
           Map.put(stats, :local, [])

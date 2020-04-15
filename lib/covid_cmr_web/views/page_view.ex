@@ -55,6 +55,8 @@ defmodule CovidCmrWeb.PageView do
 
     amount = Enum.map(donations, & &1.amount)
 
+    last_fund_raised = Enum.at(amount, -1)
+
     {intercept, slope} = Numerix.LinearRegression.fit(amount, time)
 
     targets = Enum.map(5..10, &(&1 * @baseBalance))
@@ -66,7 +68,8 @@ defmodule CovidCmrWeb.PageView do
         targets,
         fn target ->
           {:ok, date} = DateTime.from_unix(round(target * slope + intercept))
-          {target, date, Date.compare(now, date) in [:eq, :gt]}
+
+          {target, date, Date.compare(now, date) in [:eq, :gt] and last_fund_raised >= target}
         end
       )
 

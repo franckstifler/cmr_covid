@@ -15,7 +15,7 @@
         <p class="text-center links">
           <%= link "Accueil/Home", to: Routes.page_path(@conn, :index), class: active_class(@conn, Routes.page_path(@conn, :index)) %>
           <%= link "Stats", to: Routes.page_path(@conn, :stats), class: active_class(@conn, Routes.page_path(@conn, :stats))  %>
-          <%= link "Projections", to: Routes.page_path(@conn, :projections, class: active_class(@conn, Routes.page_path(@conn, :projections)) ) %>
+          <%= link "Projections", to: Routes.page_path(@conn, :projections), class: active_class(@conn, Routes.page_path(@conn, :projections)) %>
           <%= link "Consulter/Consult", to: Routes.page_path(@conn, :consult), class: active_class(@conn, Routes.page_path(@conn, :consult)) %>
         </p>
       </section>
@@ -34,7 +34,7 @@
       </div>
       <%= render @view_module, @view_template, assigns %>
       <small>Des questions ou suggestions, laissez moi un mail <a href="mailto:francktchowa@gmail.com">Franck Tchowa</a>  </small>
-      <br><small>Special thanks to contributors Cedric, Stanley, Ulrich</small>
+      <br><small>Special thanks to contributors Desmond, Cedric, Stanley, Ulrich</small>
     </main>
     <!-- Global site tag (gtag.js) - Google Analytics -->
   <script async src="https://www.googletagmanager.com/gtag/js?id=UA-82708913-4"></script>
