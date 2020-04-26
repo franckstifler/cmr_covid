@@ -1,46 +1,37 @@
 defmodule CovidCmrWeb.StatisticLive do
   use Phoenix.LiveView
 
+  @selected_countries [
+    "Cameroon",
+    "Nigeria",
+    "Côte d'Ivoire",
+    "USA",
+    "Germany",
+    "Italy",
+    "France",
+    "Spain"
+  ]
+
   def render(assigns) do
     ~L"""
     <section class="card">
     <h3>2- Données sur l'évolution du coronavirus au Cameroun et dans certains pays du monde</h3>
-    <small class="text-center">D'autres pays a ajouter a la liste? Laissez moi un mail </small>
-    <table>
-      <tr>
-        <th>Country</th>
-        <th>Total Cases</th>
-        <th>Total Active</th>
-        <th>Total Recovered</th>
-        <th>Total Deaths</th>
-        <th>Today Cases</th>
-        <th>Today Deaths</th>
-        <th>Updated On</th>
-      </tr>
-      <tr>
-        <td>WORLD</td>
-        <td><%= format_number Map.get(@global, "cases", 0) %></td>
-        <td><%= format_number Map.get(@global, "active", 0) %></td>
-        <td><%= format_number Map.get(@global, "recovered", 0) %></td>
-        <td><%= format_number Map.get(@global, "deaths", 0) %></td>
-        <td><%= format_number Map.get(@global, "todayCases", 0) %></td>
-        <td><%= format_number Map.get(@global, "todayDeaths", 0) %></td>
-        <td><%= format_date @global %></td>
-      </tr>
-      <%= for stats <- @local do %>
-        <tr>
-          <td><%= stats["country"] %> <img height=10px width=auto src=<%= stats["countryInfo"]["flag"]%>></img></td>
-          <td><%= format_number Map.get(stats, "cases", 0) %></td>
-          <td><%= format_number Map.get(stats, "active", 0) %></td>
-          <td><%= format_number Map.get(stats, "recovered", 0) %></td>
-          <td><%= format_number Map.get(stats, "deaths", 0) %></td>
-          <td><%= format_number Map.get(stats, "todayCases", 0) %></td>
-          <td><%= format_number Map.get(stats, "todayDeaths", 0) %></td>
-          <td><%= format_date stats %></td>
-          </tr>
-      <% end %>
-    </table>
+    <div class="country-container">
+    <%= for stats <- @local do %>
+    <div class="country-item">
+    <h4 class="text-center"><img height=15px width=auto src=<%= stats["countryInfo"]["flag"]%>> <%= stats["country"] %> </img></h4>
+    <p>Total Cases: <%= format_number Map.get(stats, "cases", 0) %></p>
+    <p>Total Active: <%= format_number Map.get(stats, "active", 0) %></p>
+    <p>Total Recovered: <%= format_number Map.get(stats, "recovered", 0) %></p>
+    <p>Total Deaths: <%= format_number Map.get(stats, "deaths", 0) %></p>
+    <p>Today Cases: <%= format_number Map.get(stats, "todayCases", 0) %></p>
+    <p>Today Deaths: <%= format_number Map.get(stats, "todayDeaths", 0) %></p>
+    <p>Mortality: <%= Map.get(stats, "mortality", 0)  %>%</p>
+    </div>
+    <% end %>
+    </div>
     <a href="https://github.com/novelcovid/api" _target="blank">Source of the data</a>
+    <p>D'autres pays a ajouter a la liste? Laissez moi un mail </p>
     </section>
     """
   end
@@ -52,12 +43,9 @@ defmodule CovidCmrWeb.StatisticLive do
 
     %{global: global, local: local} = Statistic.get_statistics()
 
-    selected_countries = ["Cameroon", "Germany", "USA", "France"]
+    global = Map.put(global, "mortality", compute_mortality_percentage(global))
 
-    selected =
-      Enum.filter(local, fn stats ->
-        stats["country"] in selected_countries
-      end)
+    selected = process_stats(local)
 
     {:ok,
      socket
@@ -68,17 +56,34 @@ defmodule CovidCmrWeb.StatisticLive do
   def handle_info(:update, socket) do
     %{global: global, local: local} = Statistic.get_statistics()
 
-    selected_countries = ["Cameroon", "Germany", "USA", "France"]
-
-    selected =
-      Enum.filter(local, fn stats ->
-        stats["country"] in selected_countries
-      end)
+    global = Map.put(global, "mortality", compute_mortality_percentage(global))
+    selected = process_stats(local)
 
     {:noreply,
      socket
      |> assign(:global, global)
      |> assign(:local, selected)}
+  end
+
+  defp process_stats(local) do
+    local
+    |> Enum.map(fn stats ->
+      mortality = compute_mortality_percentage(stats)
+
+      Map.put(stats, "mortality", mortality)
+    end)
+    |> Enum.filter(fn stats ->
+      stats["country"] in @selected_countries
+    end)
+  end
+
+  defp compute_mortality_percentage(stats) do
+    cases = Map.get(stats, "cases", 0)
+    deaths = Map.get(stats, "deaths", 1)
+
+    (String.to_integer("#{deaths}") / String.to_integer("#{cases}"))
+    |> Kernel.*(100)
+    |> Float.ceil(2)
   end
 
   def format_number(number) do

@@ -3,6 +3,9 @@
 @import "./phoenix.css";
 @import "../../deps/phoenix_live_view/assets/css/live_view.css";
 
+body {
+  background-color: #f8f8f8;
+}
 .container-fluid {
   width: 85%;
   margin: 0 auto;
@@ -86,13 +89,41 @@ section.card {
   margin-bottom: 10px;
 }
 
-.card {
+/* .card {
   box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
   transition: 0.3s;
-  padding: 10px 16px;
+  padding: 30px 20px;
 }
 
 /* On mouse-over, add a deeper shadow */
-.card:hover {
-  box-shadow: 0 8px 16px 0 rgba(0, 0, 0, 0.2);
+
+.country-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.country-item {
+  border-bottom: 5px solid #2218ac;
+  border-right: 1px solid #4b4b4b;
+  width: 230px;
+  margin-bottom: 20px;
+  padding: 10px 20px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+}
+
+.country-item h4 {
+  margin-bottom: 1rem;
+  color: #673ab7;
+  font-size: 18px;
+  font-weight: 700;
+  text-align: center;
+  background-color: #e7e5e4;
+}
+.country-item p {
+  margin-bottom: 0.7rem;
+  border-bottom: 1px dashed rgb(104, 104, 104);
+  font-size: 1.6rem;
+  font-weight: bolder;
 }

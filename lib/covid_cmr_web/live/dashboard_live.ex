@@ -5,37 +5,22 @@ defmodule CovidCmrWeb.DashboardLive do
   def render(assigns) do
     ~L"""
     <section class="card">
-    <h3>1- Données sur le plan de survie</h3>
-    <p class="text-center">
-    <small class="text-center">1 EUR ~= 655.957 XAF ~= 1.08 USD</small>
-    <br><small class="text-center" style="color: blue; font-weight: bold"> Mise a jour en: <%= @counter %></small>
-    </p>
-    <table>
-    <tr>
-    <th>Currency</th>
-    <th>Target</th>
-    <th>Current</th>
-        <th>Remaining</th>
-        </tr>
-        <tr>
-        <td>EUR</td>
-        <td style="color: blue;"><%= Money.parse!(@target, :EUR) %></td>
-        <td style="color: green;"><%= Money.parse!(@current, :EUR) %></td>
-        <td style="color: red;"><%= Money.parse!(@balance, :EUR) %></td>
-        </tr>
-      <tr>
-      <td>XAF</td>
-      <td style="color: blue;"><%= Money.parse!(@target * 655.957) %></td>
-        <td style="color: green;"><%= Money.parse!(@current * 655.957) %></td>
-        <td style="color: red;"><%= Money.parse!(@balance * 655.957) %></td>
-        </tr>
-        <tr>
-        <td>USD</td>
-        <td style="color: blue;"><%= Money.parse!(@target * 1.08, :USD) %></td>
-        <td style="color: green;"><%= Money.parse!(@current * 1.08, :USD) %></td>
-        <td style="color: red;"><%= Money.parse!(@balance * 1.08, :USD) %></td>
-      </tr>
-    </table>
+    <h3>1- Données sur le plan de survie <small>(1 EUR ~= 655.957 XAF ~= 1.08 USD)</small></h3>
+    <p class="text-center" style="color: blue; font-weight: bold"> Mise a jour en: <%= @counter %></p>
+    <div class="country-container">
+      <%= for contribution <- @contributions do %>
+        <div class="country-item" style="width: 300px">
+            <h4 class="text-center"><%= contribution.currency %> </img></h4>
+            <div>
+              <p>Target: <%= Money.parse!(contribution.target, contribution.currency) %></p>
+              <p>Current: <%= Money.parse!(contribution.current, contribution.currency) %></p>
+              <p>Remaining: <%= Money.parse!(contribution.target - contribution.current, contribution.currency) %></p>
+              <p>Percentage: <%= @percentage  %>%</p>
+            </div>
+        </div>
+      <% end %>
+    </div>
+    <br>
     <h6 class="text-center"><a href="https://cameroonsurvival.org/fr/dons/" target="_blank">Faire un don SCSI </a></h6>
     </section>
     """
@@ -49,22 +34,27 @@ defmodule CovidCmrWeb.DashboardLive do
 
     {current, target} = Donation.get_new_data()
 
+    contributions = convert_to_currencies(current, target)
+    percentage = (current * 100 / target) |> Float.floor(2)
+
     {:ok,
      socket
-     |> assign(:target, target)
-     |> assign(:current, current)
-     |> assign(:balance, target - current)
+     |> assign(:contributions, contributions)
+     |> assign(:percentage, percentage)
      |> assign(:counter, @counter)}
   end
 
   def handle_info(:update, socket) do
     {current, target} = Donation.get_new_data()
 
+    contributions = convert_to_currencies(current, target)
+
+    percentage = (current * 100 / target) |> Float.floor(2)
+
     {:noreply,
      socket
-     |> assign(:target, target)
-     |> assign(:current, current)
-     |> assign(:balance, target - current)}
+     |> assign(:contributions, contributions)
+     |> assign(:percentage, percentage)}
   end
 
   def handle_info(:counter, socket) do
@@ -80,5 +70,13 @@ defmodule CovidCmrWeb.DashboardLive do
       end
 
     {:noreply, socket}
+  end
+
+  defp convert_to_currencies(current, target) do
+    [EUR: 1, XAF: 655.957, USD: 1.08]
+    |> Enum.map(fn {currency, factor} ->
+      %{currency: currency, current: current * factor, target: target * factor}
+    end)
+    |> IO.inspect()
   end
 end
