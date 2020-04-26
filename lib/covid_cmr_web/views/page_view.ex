@@ -40,7 +40,9 @@ defmodule CovidCmrWeb.PageView do
         [[key, max_don.amount - min_don.amount] | acc]
       end
     )
+    |> Enum.sort(&(NaiveDateTime.compare(Enum.at(&1, 0), Enum.at(&2, 0)) == :lt))
     |> Enum.reverse()
+    |> Enum.take(80)
     |> Jason.encode!()
   end
 

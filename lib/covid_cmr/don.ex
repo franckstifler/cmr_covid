@@ -17,7 +17,7 @@ defmodule CovidCmr.Don do
   end
 
   def group_by_hour do
-    from(d in CovidCmr.Don, order_by: [:id])
+    from(d in CovidCmr.Don, order_by: [desc: d.id])
   end
 
   @spec get_last_record :: Ecto.Query.t()
