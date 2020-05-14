@@ -6,6 +6,12 @@ defmodule Statistic do
   end
 
   def init(_opts) do
+    send(self(), :fetch)
+    send(self(), :countries_info)
+    # fetch stats after 5 minutes.
+    schedule_fetch(:stats)
+    # Fetch countries info after 10 days.
+    schedule_fetch(:countries)
     {:ok, %{local: %{}, global: %{}}}
   end
 
@@ -13,9 +19,32 @@ defmodule Statistic do
     GenServer.call(__MODULE__, :statistic)
   end
 
-  def handle_call(:statistic, _from, _state) do
+  def handle_call(:statistic, _from, state) do
+    {:reply, state, state}
+  end
+
+  def handle_info(:fetch, state) do
     result = get_stats()
-    {:reply, result, result}
+
+    schedule_fetch(:stats)
+    {:noreply, Map.merge(state, result)}
+  end
+
+  def handle_info(:countries_info, state) do
+    result = get_countries_infos()
+    {:noreply, Map.put(state, :countries, result)}
+  end
+
+  defp get_countries_infos do
+    countries_url = "https://restcountries.eu/rest/v2/all"
+
+    case HTTPoison.get(countries_url) do
+      {:ok, %HTTPoison.Response{status_code: 200, body: body}} ->
+        Jason.decode!(body)
+
+      _ ->
+        []
+    end
   end
 
   defp get_stats do
@@ -45,5 +74,13 @@ defmodule Statistic do
       end
 
     stats
+  end
+
+  defp schedule_fetch(:countries) do
+    Process.send_after(self(), :countries_info, 10 * 24 * 60 * 60 * 1000)
+  end
+
+  defp schedule_fetch(:stats) do
+    Process.send_after(self(), :fetch, 5 * 60 * 1000)
   end
 end

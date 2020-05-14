@@ -47,6 +47,11 @@ defmodule CovidCmrWeb.PageView do
   end
 
   def compute_regression(donations) do
+    # take like 50% of data to estimate (since contributions are slowing with time) follow
+    # current contribution behaviour
+
+    donations = Enum.take(donations, div(Enum.count(donations), 8))
+
     time =
       Enum.map(
         donations,

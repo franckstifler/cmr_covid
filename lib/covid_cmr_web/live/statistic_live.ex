@@ -15,7 +15,7 @@ defmodule CovidCmrWeb.StatisticLive do
   def render(assigns) do
     ~L"""
     <section class="card">
-    <h3>2- Données sur l'évolution du coronavirus au Cameroun et dans certains pays du monde</h3>
+    <h3>Données sur l'évolution du coronavirus au Cameroun et dans certains pays du monde</h3>
     <div class="country-container">
     <%= for stats <- @local do %>
     <div class="country-item">
@@ -27,6 +27,9 @@ defmodule CovidCmrWeb.StatisticLive do
     <p>Today Cases: <%= format_number Map.get(stats, "todayCases", 0) %></p>
     <p>Today Deaths: <%= format_number Map.get(stats, "todayDeaths", 0) %></p>
     <p>Mortality: <%= Map.get(stats, "mortality", 0)  %>%</p>
+    <% details = get_country_detail(@countries, stats) %>
+    <p>Population: <%= format_number details.population %></p>
+    <p>Area: <%= details.area %> KM<sup>2</sup></p>
     </div>
     <% end %>
     </div>
@@ -41,7 +44,7 @@ defmodule CovidCmrWeb.StatisticLive do
       :timer.send_interval(10 * 60 * 1_000, self(), :update)
     end
 
-    %{global: global, local: local} = Statistic.get_statistics()
+    %{global: global, local: local, countries: countries} = Statistic.get_statistics()
 
     global = Map.put(global, "mortality", compute_mortality_percentage(global))
 
@@ -50,11 +53,12 @@ defmodule CovidCmrWeb.StatisticLive do
     {:ok,
      socket
      |> assign(:global, global)
+     |> assign(:countries, countries)
      |> assign(:local, selected)}
   end
 
   def handle_info(:update, socket) do
-    %{global: global, local: local} = Statistic.get_statistics()
+    %{global: global, local: local, countries: countries} = Statistic.get_statistics()
 
     global = Map.put(global, "mortality", compute_mortality_percentage(global))
     selected = process_stats(local)
@@ -62,6 +66,7 @@ defmodule CovidCmrWeb.StatisticLive do
     {:noreply,
      socket
      |> assign(:global, global)
+     |> assign(:countries, countries)
      |> assign(:local, selected)}
   end
 
@@ -93,5 +98,18 @@ defmodule CovidCmrWeb.StatisticLive do
   def format_date(stat) do
     DateTime.from_unix!(Map.get(stat, "updated", 0), :millisecond)
     |> Date.to_string()
+  end
+
+  defp get_country_detail(countries, country) do
+    found =
+      Enum.find(countries, fn c ->
+        c["alpha3Code"] == country["countryInfo"]["iso3"]
+      end)
+
+    if found == nil do
+      %{population: 0, area: 0}
+    else
+      %{population: found["population"], area: found["area"]}
+    end
   end
 end
