@@ -5,6 +5,7 @@ defmodule CovidCmrWeb.StatisticLive do
     "Cameroon",
     "Nigeria",
     "Côte d'Ivoire",
+    "Ghana",
     "USA",
     "Germany",
     "Italy",
@@ -71,15 +72,21 @@ defmodule CovidCmrWeb.StatisticLive do
   end
 
   defp process_stats(local) do
-    local
-    |> Enum.map(fn stats ->
-      mortality = compute_mortality_percentage(stats)
+    all =
+      local
+      |> Enum.map(fn stats ->
+        mortality = compute_mortality_percentage(stats)
 
-      Map.put(stats, "mortality", mortality)
-    end)
-    |> Enum.filter(fn stats ->
-      stats["country"] in @selected_countries
-    end)
+        Map.put(stats, "mortality", mortality)
+      end)
+
+    filtered =
+      all
+      |> Enum.filter(fn stats ->
+        stats["country"] in @selected_countries
+      end)
+
+    filtered ++ all
   end
 
   defp compute_mortality_percentage(stats) do
