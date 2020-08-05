@@ -1,5 +1,6 @@
 defmodule CovidCmrWeb.StatisticLive do
   use Phoenix.LiveView
+  use Phoenix.HTML
 
   @selected_countries [
     "Cameroon",
@@ -16,7 +17,38 @@ defmodule CovidCmrWeb.StatisticLive do
   def render(assigns) do
     ~L"""
     <section class="card">
-    <h3>Données sur l'évolution du coronavirus au Cameroun et dans certains pays du monde</h3>
+    <div>
+      <h4 style="text-align: center; margin: 10px 0">Statistiques globales</h4>
+      <div class="global-stats">
+        <div>
+          <p>Total Cases</p>
+          <p><%= format_number Map.get(@global, "cases", 0) %></p>
+        </div>
+        <div>
+          <p>Total Active</p>
+          <p><%= format_number Map.get(@global, "active", 0) %></p>
+        </div>
+        <div>
+          <p>Total Recovered</p>
+          <p><%= format_number Map.get(@global, "recovered", 0) %></p>
+        </div>
+        <div>
+          <p>Total Deaths</p>
+          <p><%= format_number Map.get(@global, "deaths", 0) %></p>
+        </div>
+        <div>
+          <p>Today Cases</p>
+          <p><%= format_number Map.get(@global, "todayCases", 0) %></p>
+        </div>
+        <div>
+          <p>Today Deaths</p>
+          <p><%= format_number Map.get(@global, "todayDeaths", 0) %></p>
+        </div>
+      </div>
+    </div>
+    <%= f = form_for :form, "#", [phx_change: :search]  %>
+      <%= text_input f, :search, placeholder: "Search country" %>
+    </form>
     <div class="country-container">
     <%= for stats <- @local do %>
     <div class="country-item">
@@ -55,7 +87,17 @@ defmodule CovidCmrWeb.StatisticLive do
      socket
      |> assign(:global, global)
      |> assign(:countries, countries)
+     |> assign(:all_countries_data, selected)
      |> assign(:local, selected)}
+  end
+
+  def handle_event("search", %{"form" => %{"search" => search}}, socket) do
+    matching_countries =
+      Enum.filter(socket.assigns.all_countries_data, fn country ->
+        String.contains?(String.downcase(country["country"]), String.downcase(search))
+      end)
+
+    {:noreply, assign(socket, local: matching_countries)}
   end
 
   def handle_info(:update, socket) do
@@ -68,6 +110,7 @@ defmodule CovidCmrWeb.StatisticLive do
      socket
      |> assign(:global, global)
      |> assign(:countries, countries)
+     |> assign(:all_countries_data, selected)
      |> assign(:local, selected)}
   end
 
