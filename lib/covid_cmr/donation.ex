@@ -62,7 +62,7 @@ defmodule Donation do
     {:noreply, state}
   end
 
-  defp get_current_status() do
+  def get_current_status() do
     case HTTPoison.get("https://cameroonsurvival.org/fr/dons/") do
       {:ok, %HTTPoison.Response{status_code: 200, body: body}} ->
         {:ok, document} =
@@ -76,11 +76,11 @@ defmodule Donation do
             Jason.decode!(x)
           end)
 
-        current = String.replace(current["EUR"], "€", "") |> String.replace(".", "")
+        current = String.replace(current["EUR"], "€", "")
 
-        case Integer.parse(current) do
-          {current, _} ->
-            {:ok, current}
+        case Float.parse(current) do
+          {parsed, _} ->
+            {:ok, trunc(parsed * 1_000_000)}
 
           _ ->
             {:error, :parsing_failed}
