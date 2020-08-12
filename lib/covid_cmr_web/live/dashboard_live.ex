@@ -5,7 +5,7 @@ defmodule CovidCmrWeb.DashboardLive do
   def render(assigns) do
     ~L"""
     <section class="card">
-    <h3>1- Données sur le plan de survie <small>(1 EUR ~= 655.957 XAF ~= 1.08 USD)</small></h3>
+    <h3 class="text-center">OBJECTIF ATTEINT / OBJECTIVE ATTAINED <small>(1 EUR ~= 655.957 XAF ~= 1.08 USD)</small></h4>
     <p class="text-center" style="color: blue; font-weight: bold"> Mise a jour en: <%= @counter %></p>
     <div class="country-container">
       <%= for contribution <- @contributions do %>

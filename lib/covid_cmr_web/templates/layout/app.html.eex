@@ -38,9 +38,11 @@
       <small>Les statistiques d'infections toutes les 5 min </small><br>
     </div>
     <%= render @view_module, @view_template, assigns %>
-    <small>Des questions ou suggestions, laissez moi un mail <a href="mailto:francktchowa@gmail.com">Franck Tchowa</a>
-    </small>
-    <br><small>Special thanks to contributors Desmond, Cedric, Stanley, Ulrich, Maturin</small>
+    <div class="text-center">
+      <p>Des questions ou suggestions, laissez moi un mail <a href="mailto:francktchowa@gmail.com">Franck Tchowa</a>
+      </p>
+      <p>Special thanks to contributors Desmond, Cedric, Stanley, Ulrich, Maturin</p>
+    </div>
   </main>
   <!-- Global site tag (gtag.js) - Google Analytics -->
   <script async src="https://www.googletagmanager.com/gtag/js?id=UA-82708913-4"></script>
