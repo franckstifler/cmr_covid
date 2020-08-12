@@ -50,7 +50,7 @@ defmodule CovidCmrWeb.PageView do
     # take like 50% of data to estimate (since contributions are slowing with time) follow
     # current contribution behaviour
 
-    donations = Enum.take(donations, div(Enum.count(donations), 8))
+    donations = Enum.take(donations, div(Enum.count(donations), 12))
 
     time =
       Enum.map(
@@ -62,7 +62,7 @@ defmodule CovidCmrWeb.PageView do
 
     amount = Enum.map(donations, & &1.amount)
 
-    last_fund_raised = Enum.at(amount, -1)
+    last_fund_raised = Enum.at(amount, 1)
 
     {intercept, slope} = Numerix.LinearRegression.fit(amount, time)
 
