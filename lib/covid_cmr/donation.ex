@@ -1,4 +1,4 @@
-defmodule Donation do
+defmodule CovidCmr.Donation do
   use GenServer
   alias CovidCmr.{Repo, Don}
 

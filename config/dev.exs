@@ -21,6 +21,15 @@ config :covid_cmr, CovidCmrWeb.Endpoint,
     ]
   ]
 
+# Configure your database
+config :covid_cmr, CovidCmr.Repo,
+  username: "postgres",
+  password: "postgres",
+  database: "covid_cmr_dev",
+  hostname: "localhost",
+  show_sensitive_data_on_connection_error: true,
+  pool_size: 10
+
 # ## SSL Support
 #
 # In order to use HTTPS in development, a self-signed

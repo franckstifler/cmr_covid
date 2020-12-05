@@ -7,13 +7,6 @@
 # General application configuration
 use Mix.Config
 
-config :covid_cmr, CovidCmr.Repo,
-  url: "postgres://nojlkafckhgwtx:c9388c031b6e162c8b1fb740100a7895cb54decb211b56a42b9deac8a605170d@ec2-52-207-93-32.compute-1.amazonaws.com:5432/d7itqlhecr9nc1",
-  ssl: true,
-  pool_size: 2,
-  queue_target: 100,
-  queue_interval: 10000
-
 # Configures the endpoint
 config :covid_cmr, CovidCmrWeb.Endpoint,
   url: [host: "localhost"],

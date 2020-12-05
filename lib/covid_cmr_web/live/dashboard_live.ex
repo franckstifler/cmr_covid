@@ -1,5 +1,6 @@
 defmodule CovidCmrWeb.DashboardLive do
   use Phoenix.LiveView
+  alias CovidCmr.Donation
 
   @counter 60
   def render(assigns) do

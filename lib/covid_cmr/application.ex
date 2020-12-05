@@ -10,9 +10,9 @@ defmodule CovidCmr.Application do
     children = [
       # Start the endpoint when the application starts
       CovidCmrWeb.Endpoint,
-      CovidCmr.Repo ,
-      Donation,
-      Statistic
+      CovidCmr.Repo,
+      CovidCmr.Donation,
+      CovidCmr.Statistic
       # Starts a worker by calling: CovidCmr.Worker.start_link(arg)
       # {CovidCmr.Worker, arg},
     ]

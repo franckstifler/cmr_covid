@@ -6,5 +6,12 @@ config :covid_cmr, CovidCmrWeb.Endpoint,
   http: [port: 4002],
   server: false
 
+config :covid_cmr, CovidCmr.Repo,
+  username: "postgres",
+  password: "postgres",
+  database: "covid_cmr_test#{System.get_env("MIX_TEST_PARTITION")}",
+  hostname: "localhost",
+  pool: Ecto.Adapters.SQL.Sandbox
+
 # Print only warnings and errors during test
 config :logger, level: :warn

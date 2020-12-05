@@ -9,6 +9,13 @@ defmodule CovidCmr.MixProject do
       elixirc_paths: elixirc_paths(Mix.env()),
       compilers: [:phoenix, :gettext] ++ Mix.compilers(),
       start_permanent: Mix.env() == :prod,
+      test_coverage: [tool: ExCoveralls],
+      preferred_cli_env: [
+        coveralls: :test,
+        "coveralls.detail": :test,
+        "coveralls.post": :test,
+        "coveralls.html": :test
+      ],
       deps: deps()
     ]
   end
@@ -40,13 +47,14 @@ defmodule CovidCmr.MixProject do
       {:jason, "~> 1.0"},
       {:plug_cowboy, "~> 2.0"},
       {:floki, "~> 0.26"},
-      {:httpoison, "~> 1.6"},
+      {:httpoison, "~> 1.7"},
       {:phoenix_live_view, "~> 0.10.0"},
       {:money, "~> 1.4"},
       {:ecto_sql, "~> 3.0"},
       {:postgrex, ">= 0.0.0"},
       {:chartkick, "~>0.4.0"},
-      {:numerix, "~> 0.5"}
+      {:numerix, "~> 0.5"},
+      {:excoveralls, "~> 0.10", only: :test}
     ]
   end
 end
