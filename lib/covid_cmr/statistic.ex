@@ -1,15 +1,17 @@
 defmodule CovidCmr.Statistic do
   use GenServer
   require Logger
-  alias CovidCmr.WebService
+
+  @web_service Application.get_env(:covid_cmr, :web_service)
 
   def start_link(_) do
     GenServer.start_link(__MODULE__, %{}, name: __MODULE__)
   end
 
   def init(_opts) do
-    covid_stats = WebService.get_covid_statistics()
-    countries_infos = WebService.get_countries_infos()
+    covid_stats = @web_service.get_covid_statistics()
+
+    countries_infos = @web_service.get_countries_infos()
 
     schedule_fetch(:countries)
     schedule_fetch(:stats)
@@ -26,15 +28,14 @@ defmodule CovidCmr.Statistic do
   end
 
   def handle_info(:fetch_covid_stats, state) do
-    result = WebService.get_covid_statistics()
+    result = @web_service.get_covid_statistics()
 
     schedule_fetch(:stats)
     {:noreply, Map.merge(state, result)}
   end
 
   def handle_info(:countries_info, state) do
-    IO.inspect("Wer're here")
-    result = WebService.get_countries_infos()
+    result = @web_service.get_countries_infos()
     {:noreply, Map.put(state, :countries, result)}
   end
 
@@ -43,6 +44,6 @@ defmodule CovidCmr.Statistic do
   end
 
   defp schedule_fetch(:stats) do
-    Process.send_after(self(), :fetch, 10 * 60 * 1000)
+    Process.send_after(self(), :fetch_covid_stats, 10 * 60 * 1000)
   end
 end

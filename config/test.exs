@@ -13,5 +13,7 @@ config :covid_cmr, CovidCmr.Repo,
   hostname: "localhost",
   pool: Ecto.Adapters.SQL.Sandbox
 
+config :covid_cmr, web_service: CovidCmr.WebService.InMemory
+
 # Print only warnings and errors during test
 config :logger, level: :warn

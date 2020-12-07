@@ -1,9 +1,10 @@
-defmodule CovidCmr.WebService do
+defmodule CovidCmr.WebService.HTTPClient do
+  require Logger
+
   @countries_url "https://restcountries.eu/rest/v2/all?fields=population;area;alpha3Code;flag;capital"
   @global_url "https://disease.sh/v3/covid-19/all?yesterday=true"
   @all_url "https://disease.sh/v3/covid-19/countries?yesterday=true"
-  require Logger
-  @behaviour CovidCmr.WebServiceBehaviour
+  @behaviour CovidCmr.WebService
 
   def get_countries_infos do
     case HTTPoison.get(@countries_url) do

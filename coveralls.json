@@ -1,0 +1,16 @@
+{
+    "skip_files": [
+        "lib/covid_cmr/application.ex",
+        "lib/covid_cmr_web.ex",
+        "lib/covid_cmr_web/gettext.ex",
+        "lib/covid_cmr_web/endpoint.ex",
+        "lib/covid_cmr_web/views/error_helpers.ex",
+        "lib/covid_cmr_web/router.ex",
+        "lib/covid_cmr/repo.ex",
+        "test/"
+    ],
+  
+    "coverage_options": {
+      "treat_no_relevant_lines_as_covered": true
+    }
+  }
