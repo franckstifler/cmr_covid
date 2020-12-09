@@ -4,7 +4,7 @@ defmodule CovidCmr.Donation do
 
   def start_link(_opts) do
     current =
-      case Repo.one(Don.get_last_record()) do
+      case Don.get_last_record() do
         nil ->
           0
 
@@ -54,9 +54,7 @@ defmodule CovidCmr.Donation do
   end
 
   def handle_info(:persist_data, {current, _} = state) do
-    %Don{}
-    |> Don.changeset(%{amount: current})
-    |> Repo.insert()
+    Don.create_don(%{amount: current})
 
     schedule_save()
     {:noreply, state}

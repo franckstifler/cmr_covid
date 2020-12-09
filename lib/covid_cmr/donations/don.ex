@@ -2,6 +2,8 @@ defmodule CovidCmr.Don do
   use Ecto.Schema
   import Ecto.Changeset
   import Ecto.Query
+  alias CovidCmr.Repo
+  alias CovidCmr.Don
 
   schema("donations") do
     field(:amount, :integer)
@@ -16,12 +18,19 @@ defmodule CovidCmr.Don do
     |> unique_constraint(:amount)
   end
 
-  def group_by_hour do
+  def list_don do
     from(d in CovidCmr.Don, order_by: [desc: d.id])
+    |> Repo.all()
   end
 
-  @spec get_last_record :: Ecto.Query.t()
   def get_last_record do
     from(d in CovidCmr.Don, order_by: [desc: d.inserted_at], limit: 1)
+    |> Repo.one()
+  end
+
+  def create_don(attrs \\ %{}) do
+    %Don{}
+    |> Don.changeset(attrs)
+    |> Repo.insert()
   end
 end
