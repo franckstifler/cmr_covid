@@ -4,6 +4,7 @@ defmodule CovidCmr.WebService.HTTPClient do
   @countries_url "https://restcountries.eu/rest/v2/all?fields=population;area;alpha3Code;flag;capital"
   @global_url "https://disease.sh/v3/covid-19/all?yesterday=true"
   @all_url "https://disease.sh/v3/covid-19/countries?yesterday=true"
+  @survie_url "https://cameroonsurvival.org/fr/dons/"
   @behaviour CovidCmr.WebService
 
   def get_countries_infos do
@@ -42,5 +43,34 @@ defmodule CovidCmr.WebService.HTTPClient do
       end
 
     stats
+  end
+
+  def get_current_contributions(url \\ @survie_url) do
+    case HTTPoison.get(url) do
+      {:ok, %HTTPoison.Response{status_code: 200, body: body}} ->
+        {:ok, document} =
+          body
+          |> Floki.parse_document()
+
+        [current, _target] =
+          document
+          |> Floki.attribute("span", "data-amounts")
+          |> Enum.map(fn x ->
+            Jason.decode!(x)
+          end)
+
+        current = String.replace(current["EUR"], "€", "")
+
+        case Float.parse(current) do
+          {parsed, _} ->
+            {:ok, trunc(parsed * 1_000_000)}
+
+          _ ->
+            {:error, :parsing_failed}
+        end
+
+      _ ->
+        {:error, :failed_fetch}
+    end
   end
 end

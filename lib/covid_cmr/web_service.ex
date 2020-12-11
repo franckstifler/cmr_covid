@@ -12,4 +12,10 @@ defmodule CovidCmr.WebService do
   such as population, area...
   """
   @callback get_countries_infos() :: list()
+
+  @doc """
+  Gets the current total contributions from webscrapping on the survie site
+  """
+  @callback get_current_contributions() ::
+              {:ok, number()} | {:error, :parsing_failed} | {:error, :failed_fetch}
 end

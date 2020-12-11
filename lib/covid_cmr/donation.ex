@@ -1,6 +1,14 @@
 defmodule CovidCmr.Donation do
   use GenServer
-  alias CovidCmr.{Repo, Don}
+  alias CovidCmr.Don
+
+  # Insert in db after 10 mins.
+  @save_interval 10 * 60 * 1000
+  # Fectch triggered by live-view every 45 sec
+  @fetch_interval 45 * 1000
+  # target for the survival project
+  @target 1_000_000
+  @web_service Application.get_env(:covid_cmr, :web_service)
 
   def start_link(_opts) do
     current =
@@ -12,13 +20,13 @@ defmodule CovidCmr.Donation do
           don.amount
       end
 
-    target = 1_000_000
-    GenServer.start_link(__MODULE__, {current, target}, name: __MODULE__)
+    GenServer.start_link(__MODULE__, {current, @target}, name: __MODULE__)
   end
 
   def init(state) do
     schedule_fetch()
     schedule_save()
+
     {:ok, state}
   end
 
@@ -26,26 +34,23 @@ defmodule CovidCmr.Donation do
     GenServer.call(__MODULE__, :get, 10_000)
   end
 
-  def schedule_fetch() do
-    Process.send_after(self(), :get_new_data, 45 * 1000)
+  def schedule_fetch(fetch_interval \\ @fetch_interval) do
+    Process.send_after(self(), :fetch_contributions, fetch_interval)
   end
 
-  def schedule_save() do
-    # Insert in db after 10 mins.
-    Process.send_after(self(), :persist_data, 10 * 60 * 1000)
+  def schedule_save(save_interval \\ @save_interval) do
+    Process.send_after(self(), :persist_data, save_interval)
   end
 
   def handle_call(:get, _from, state) do
     {:reply, state, state}
   end
 
-  def handle_info(:get_new_data, state) do
-    target = 1_000_000
-
-    case get_current_status() do
+  def handle_info(:fetch_contributions, state) do
+    case @web_service.get_current_contributions() do
       {:ok, current} ->
         schedule_fetch()
-        {:noreply, {current, target}}
+        {:noreply, {current, @target}}
 
       _ ->
         schedule_fetch()
@@ -58,34 +63,5 @@ defmodule CovidCmr.Donation do
 
     schedule_save()
     {:noreply, state}
-  end
-
-  def get_current_status() do
-    case HTTPoison.get("https://cameroonsurvival.org/fr/dons/") do
-      {:ok, %HTTPoison.Response{status_code: 200, body: body}} ->
-        {:ok, document} =
-          body
-          |> Floki.parse_document()
-
-        [current, _target] =
-          document
-          |> Floki.attribute("span", "data-amounts")
-          |> Enum.map(fn x ->
-            Jason.decode!(x)
-          end)
-
-        current = String.replace(current["EUR"], "€", "")
-
-        case Float.parse(current) do
-          {parsed, _} ->
-            {:ok, trunc(parsed * 1_000_000)}
-
-          _ ->
-            {:error, :parsing_failed}
-        end
-
-      _ ->
-        {:error, :failed_fetch}
-    end
   end
 end

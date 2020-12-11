@@ -113,4 +113,8 @@ defmodule CovidCmr.WebService.InMemory do
       ]
     }
   end
+
+  def get_current_contributions() do
+    {:ok, 2_000_000}
+  end
 end
