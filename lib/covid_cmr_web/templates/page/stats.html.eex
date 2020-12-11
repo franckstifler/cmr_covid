@@ -1,4 +1,4 @@
-<% donations = Repo.all(Don.group_by_hour()) %>
+<% donations = Don.list_don() %>
 <%= live_render(@conn, CovidCmrWeb.DashboardLive) %>
 <h4>Dons par heure <small>(Remontant jsuque 3 jours)</small></h4>
 <%= raw(Chartkick.line_chart render_hour_chart(donations), suffix: "€", thousands: ",", xtitle: "Time", ytitle: "Amount Raised") %>
