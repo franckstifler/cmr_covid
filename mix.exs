@@ -10,6 +10,7 @@ defmodule CovidCmr.MixProject do
       compilers: [:phoenix, :gettext] ++ Mix.compilers(),
       start_permanent: Mix.env() == :prod,
       test_coverage: [tool: ExCoveralls],
+      dialyzer: [plt_add_deps: :transitive],
       preferred_cli_env: [
         coveralls: :test,
         "coveralls.detail": :test,
@@ -54,7 +55,9 @@ defmodule CovidCmr.MixProject do
       {:postgrex, ">= 0.0.0"},
       {:chartkick, "~>0.4.0"},
       {:numerix, "~> 0.5"},
-      {:excoveralls, "~> 0.10", only: :test}
+      {:git_hooks, "~> 0.5", only: [:test, :dev], runtime: false},
+      {:excoveralls, "~> 0.10", only: :test},
+      {:dialyxir, "~> 1.0", only: [:dev], runtime: false}
     ]
   end
 end
