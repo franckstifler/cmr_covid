@@ -134,8 +134,6 @@ defmodule CovidCmrWeb.StatisticLive do
     filtered ++ all
   end
 
-  defp compute_mortality_percentage(%{}), do: 0
-
   defp compute_mortality_percentage(stats) do
     cases = Map.get(stats, "cases", 0)
     deaths = Map.get(stats, "deaths", 1)
