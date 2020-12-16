@@ -1,9 +1,10 @@
 defmodule CovidCmrWeb.PageView do
   use CovidCmrWeb, :view
 
-  alias CovidCmr.{Repo, Don}
+  alias CovidCmr.Don
 
   @baseBalance 100_000
+  @targets Enum.map(5..10, &(&1 * @baseBalance))
 
   def render_day_chart(donations) do
     donations
@@ -60,31 +61,25 @@ defmodule CovidCmrWeb.PageView do
         end
       )
 
-    amount = Enum.map(donations, & &1.amount)
+    amounts_list = Enum.map(donations, & &1.amount)
 
-    last_fund_raised = Enum.at(amount, 1)
-
-    {intercept, slope} = Numerix.LinearRegression.fit(amount, time)
-
-    targets = Enum.map(5..10, &(&1 * @baseBalance))
+    last_fund_raised = Enum.at(amounts_list, 1, 0)
 
     now = DateTime.truncate(DateTime.utc_now(), :second)
 
-    expected_dates =
-      Enum.map(
-        targets,
-        fn target ->
-          {:ok, date} = DateTime.from_unix(round(target * slope + intercept))
+    case Numerix.LinearRegression.fit(amounts_list, time) do
+      nil ->
+        Enum.map(@targets, &{&1, "No Data Yet.", false})
 
-          {target, date, Date.compare(now, date) in [:eq, :gt] and last_fund_raised >= target}
-        end
-      )
+      {intercept, slope} ->
+        Enum.map(
+          @targets,
+          fn target ->
+            {:ok, date} = DateTime.from_unix(round(target * slope + intercept))
 
-    correlation = Numerix.LinearRegression.r_squared(amount, time)
-
-    %{
-      coeffs: {intercept, slope, correlation},
-      targets: expected_dates
-    }
+            {target, date, Date.compare(now, date) in [:eq, :gt] and last_fund_raised >= target}
+          end
+        )
+    end
   end
 end

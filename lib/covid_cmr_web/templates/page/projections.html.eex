@@ -1,7 +1,7 @@
 <table>
     <tr>
         <% donations = Don.list_don() %>
-        <% %{coeffs: coeffs, targets: targets} = compute_regression(donations) %>
+        <% targets = compute_regression(donations) %>
         <th>Target €</th>
         <th>Target FCFA</th>
         <th>Estimation J/H</th>
@@ -14,6 +14,3 @@
     </tr>
     <% end %>
 </table>
-<p>Applying a correlation on the data we obtain the equation: <strong>y = <%= elem(coeffs, 1) %>X +
-        <%= elem(coeffs, 0) %></strong></p>
-<p>With a correlation coefficient r = <%= elem(coeffs, 2) %></p>

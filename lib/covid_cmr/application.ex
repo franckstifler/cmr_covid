@@ -11,6 +11,7 @@ defmodule CovidCmr.Application do
       # Start the endpoint when the application starts
       CovidCmrWeb.Endpoint,
       CovidCmr.Repo,
+      {Phoenix.PubSub, [name: CovidCmr.PubSub, adapter: Phoenix.PubSub.PG2]},
       CovidCmr.Donation,
       CovidCmr.Statistic
       # Starts a worker by calling: CovidCmr.Worker.start_link(arg)

@@ -12,7 +12,7 @@ config :covid_cmr, CovidCmrWeb.Endpoint,
   url: [host: "localhost"],
   secret_key_base: "rFW+3LmUV0fjC+sHGKXRVVbqSgjvDN3Z39Et61v4WW7+d4ykSis+ZHn37slN29oB",
   render_errors: [view: CovidCmrWeb.ErrorView, accepts: ~w(html json)],
-  pubsub: [name: CovidCmr.PubSub, adapter: Phoenix.PubSub.PG2]
+  pubsub_server: CovidCmr.PubSub
 
 # Configures Elixir's Logger
 config :logger, :console,

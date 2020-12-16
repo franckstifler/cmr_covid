@@ -1,6 +1,6 @@
 <% donations = Don.list_don() %>
 <%= live_render(@conn, CovidCmrWeb.DashboardLive) %>
-<h4>Dons par heure <small>(Remontant jsuque 3 jours)</small></h4>
+<h4>Dons Par Heure <small>(Remontant jusque 3 jours)</small></h4>
 <%= raw(Chartkick.line_chart render_hour_chart(donations), suffix: "€", thousands: ",", xtitle: "Time", ytitle: "Amount Raised") %>
-<h4>Dons par Jour</h4>
+<h4>Dons Par Jour</h4>
 <%= raw(Chartkick.line_chart render_day_chart(donations), suffix: "€", thousands: ",", xtitle: "Day/Jour", ytitle: "Amount Raised") %>

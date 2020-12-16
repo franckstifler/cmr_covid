@@ -78,6 +78,5 @@ defmodule CovidCmrWeb.DashboardLive do
     |> Enum.map(fn {currency, factor} ->
       %{currency: currency, current: current * factor, target: target * factor}
     end)
-    |> IO.inspect()
   end
 end

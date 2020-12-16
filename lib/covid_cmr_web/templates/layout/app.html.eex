@@ -1,61 +1,20 @@
-<!DOCTYPE html>
-<html lang="en">
-
-<head>
-  <meta charset="utf-8" />
-  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Covid Cameroon</title>
-  <link rel="stylesheet" href="<%= Routes.static_path(@conn, "/css/app.css") %>" />
-  <%= csrf_meta_tag() %>
-  <script type="text/javascript" src="<%= Routes.static_path(@conn, "/js/app.js") %>"></script>
-</head>
-
-<body>
-  <header>
-    <section>
-      <p class="text-center links">
-        <%= link "Accueil/Home", to: Routes.page_path(@conn, :index), class: active_class(@conn, Routes.page_path(@conn, :index)) %>
-        <%= link "Survie Cameroon", to: Routes.page_path(@conn, :stats), class: active_class(@conn, Routes.page_path(@conn, :stats))  %>
-        <%= link "Projections", to: Routes.page_path(@conn, :projections), class: active_class(@conn, Routes.page_path(@conn, :projections)) %>
-        <%= link "Consulter/Consult", to: Routes.page_path(@conn, :consult), class: active_class(@conn, Routes.page_path(@conn, :consult)) %>
-      </p>
-    </section>
-  </header>
-  <main role="main" class="container-fluid">
+<main role="main" class="container-fluid">
     <p class="alert alert-info" role="alert"><%= get_flash(@conn, :info) %></p>
     <p class="alert alert-danger" role="alert"><%= get_flash(@conn, :error) %></p>
     <div class="presentation">
-      <p>Bienvenue, petite application ou vous aurez les chiffres sur les dons et sur les cas détectés. L'actualisation
-        se fait en temps réel!</p>
-      <div class="recommendations">
-        <small>Lavez vos mains régulierement - Eviter les contacts (1m de distance) - Ne touchez pas vos yeux, nez ou
-          bouche</small> <br>
-        <small>Wash your hands regularly - Avoid close contact (1m distance) - Don't touch your eyes, nose, or mouth
-        </small>
-      </div>
-      <small>Les dons sont mis a jour automatiquement chaque 60 sec, </small>
-      <small>Les statistiques d'infections toutes les 5 min </small><br>
+        <p>Bienvenue, petite application ou vous aurez les chiffres sur les dons et sur les cas détectés.
+            L'actualisation
+            se fait en temps réel!</p>
+        <div class="recommendations">
+            <small>Lavez vos mains régulierement - Eviter les contacts (1m de distance) - Ne touchez pas vos yeux, nez
+                ou
+                bouche</small> <br>
+            <small>Wash your hands regularly - Avoid close contact (1m distance) - Don't touch your eyes, nose, or
+                mouth
+            </small>
+        </div>
+        <small>Les dons sont mis a jour automatiquement chaque 60 sec, </small>
+        <small>Les statistiques d'infections toutes les 5 min </small><br>
     </div>
-    <%= render @view_module, @view_template, assigns %>
-    <div class="text-center">
-      <p>Des questions ou suggestions, laissez moi un mail <a href="mailto:francktchowa@gmail.com">Franck Tchowa</a>
-      </p>
-      <p>Special thanks to contributors Desmond, Cedric, Stanley, Ulrich, Maturin</p>
-    </div>
-  </main>
-  <!-- Global site tag (gtag.js) - Google Analytics -->
-  <script async src="https://www.googletagmanager.com/gtag/js?id=UA-82708913-4"></script>
-  <script>
-    window.dataLayer = window.dataLayer || [];
-
-    function gtag() {
-      dataLayer.push(arguments);
-    }
-    gtag('js', new Date());
-
-    gtag('config', 'UA-82708913-4');
-  </script>
-</body>
-
-</html>
+    <%= @inner_content %>
+</main>
