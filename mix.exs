@@ -54,7 +54,7 @@ defmodule CovidCmr.MixProject do
       {:ecto_sql, "~> 3.4.4"},
       {:postgrex, ">= 0.0.0"},
       {:chartkick, "~>0.4.0"},
-      {:numerix, "~> 0.5"},
+      {:numerix, github: "franckstifler/Numerix"},
       {:git_hooks, "~> 0.5", only: [:test, :dev], runtime: false},
       {:excoveralls, "~> 0.10", only: :test},
       {:dialyxir, "~> 1.0", only: [:dev], runtime: false}
