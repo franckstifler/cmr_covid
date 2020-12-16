@@ -10,6 +10,7 @@ defmodule CovidCmr.MixProject do
       compilers: [:phoenix, :gettext] ++ Mix.compilers(),
       start_permanent: Mix.env() == :prod,
       test_coverage: [tool: ExCoveralls],
+      aliases: aliases(),
       dialyzer: dialyzer(),
       preferred_cli_env: [
         coveralls: :test,
@@ -65,6 +66,15 @@ defmodule CovidCmr.MixProject do
     [
       plt_core_path: "priv/plts",
       plt_file: {:no_warn, "priv/plts/dialyzer.plt"}
+    ]
+  end
+
+  defp aliases do
+    [
+      setup: ["deps.get", "ecto.setup", "cmd npm install --prefix assets"],
+      "ecto.setup": ["ecto.create", "ecto.migrate", "run priv/repo/seeds.exs"],
+      "ecto.reset": ["ecto.drop", "ecto.setup"],
+      test: ["ecto.create --quiet", "ecto.migrate --quiet", "test"]
     ]
   end
 end
