@@ -35,3 +35,7 @@ npm-debug.log
 
 /.elixir_ls/
 .idea/
+
+# Dialyzer related files.
+/priv/plts/*.plt
+/priv/plts/*.plt.hash

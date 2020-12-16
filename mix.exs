@@ -10,7 +10,7 @@ defmodule CovidCmr.MixProject do
       compilers: [:phoenix, :gettext] ++ Mix.compilers(),
       start_permanent: Mix.env() == :prod,
       test_coverage: [tool: ExCoveralls],
-      dialyzer: [plt_add_deps: :transitive],
+      dialyzer: dialyzer(),
       preferred_cli_env: [
         coveralls: :test,
         "coveralls.detail": :test,
@@ -58,6 +58,13 @@ defmodule CovidCmr.MixProject do
       {:git_hooks, "~> 0.5", only: [:test, :dev], runtime: false},
       {:excoveralls, "~> 0.10", only: :test},
       {:dialyxir, "~> 1.0", only: [:dev], runtime: false}
+    ]
+  end
+
+  defp dialyzer do
+    [
+      plt_core_path: "priv/plts",
+      plt_file: {:no_warn, "priv/plts/dialyzer.plt"}
     ]
   end
 end
