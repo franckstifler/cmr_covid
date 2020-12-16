@@ -20,7 +20,10 @@ defmodule CovidCmrWeb.ConnCase do
   using do
     quote do
       # Import conveniences for testing with connections
-      use Phoenix.ConnTest
+      import Plug.Conn
+      import Phoenix.ConnTest
+      import CovidCmrWeb.ConnCase
+
       alias CovidCmrWeb.Router.Helpers, as: Routes
 
       # The default endpoint for testing
@@ -28,7 +31,13 @@ defmodule CovidCmrWeb.ConnCase do
     end
   end
 
-  setup _tags do
+  setup tags do
+    :ok = Ecto.Adapters.SQL.Sandbox.checkout(CovidCmr.Repo)
+
+    unless tags[:async] do
+      Ecto.Adapters.SQL.Sandbox.mode(CovidCmr.Repo, {:shared, self()})
+    end
+
     {:ok, conn: Phoenix.ConnTest.build_conn()}
   end
 end
