@@ -26,7 +26,7 @@ defmodule CovidCmr.WebService.HTTPClient do
           stats
           |> Map.put(:global, Jason.decode!(body))
 
-        error ->
+        {:error, error} ->
           Logger.log(:warning, error)
           Map.put(stats, :global, %{})
       end
@@ -37,7 +37,7 @@ defmodule CovidCmr.WebService.HTTPClient do
           stats
           |> Map.put(:local, Jason.decode!(body))
 
-        error ->
+        {:error, error} ->
           Logger.log(:warning, error)
           Map.put(stats, :local, [])
       end
